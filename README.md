@@ -11,6 +11,15 @@ openstack log colorizer is a small script with "no depends" (just standard pytho
   * Filter log by level
 
 
+Quick setup
+============
+
+Just add the script in your path :
+```
+wget -O /usr/local/bin/openstack_log_colorizer https://raw.githubusercontent.com/gaelL/openstack-log-colorizer/master/openstack_log_colorizer
+chmod +x /usr/local/bin/openstack_log_colorizer
+```
+
 Usage
 ======
 
