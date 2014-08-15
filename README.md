@@ -38,6 +38,20 @@ tail -F logfile | openstack_log_colorizer
 Filter usage
 =============
 
+```
+usage: openstack_log_colorizer [-h] [-l level] [-e level [level ...]]
+                               [-i level [level ...]]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l level, --level level
+                        Set log level you want display
+  -e level [level ...], --exclude level [level ...]
+                        Set log level you want exclude
+  -i level [level ...], --include level [level ...]
+                        Set log level you only want display
+```
+
 You can play with 3 filter feature (level, include, exclude) :
 
   * All features are not case sensitive
