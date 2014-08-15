@@ -1,0 +1,20 @@
+2014-08-14 18:43:58.950 4092 INFO neutron.plugins.openvswitch.agent.ovs_neutron_agent [-] Configuration for device 10170007-cc24-40af-a92d-bde5b54c9af0 completed.
+2014-08-14 18:44:15.136 4092 INFO neutron.agent.securitygroups_rpc [-] Preparing filters for devices set([u'45a394f7-1bc7-4ee6-98c5-a631c67bb79a'])
+2014-08-14 18:44:17.689 4092 WARNING neutron.plugins.openvswitch.agent.ovs_neutron_agent [-] Device 45a394f7-1bc7-4ee6-98c5-a631c67bb79a not defined on plugin
+2014-08-14 18:44:12.782 3909 TRACE neutron.agent.l3_agent   File "/usr/lib/python2.7/dist-packages/neutron/agent/l3_agent.py", line 957, in _report_state
+2014-08-14 18:44:12.782 3909 TRACE neutron.agent.l3_agent     self.use_call)
+2014-08-14 18:44:12.782 3909 TRACE neutron.agent.l3_agent   File "/usr/lib/python2.7/dist-packages/neutron/agent/rpc.py", line 72, in report_state
+2014-08-14 18:18:10.074 4035 ERROR oslo.messaging._drivers.impl_rabbit [-] AMQP server on 10.66.6.15:5672 is unreachable: [Errno 101] ENETUNREACH. Trying again in 17 seconds.
+2014-08-14 18:18:27.091 4035 INFO oslo.messaging._drivers.impl_rabbit [-] Reconnecting to AMQP server on 10.66.6.15:5672
+2014-08-14 18:18:27.091 4035 INFO oslo.messaging._drivers.impl_rabbit [-] Delaying reconnect for 1.0 seconds...
+2014-08-14 18:18:28.100 4035 ERROR oslo.messaging._drivers.impl_rabbit [-] AMQP server on 10.66.6.15:5672 is unreachable: [Errno 101] ENETUNREACH. Trying again in 19 seconds.
+2014-08-14 18:18:47.119 4035 INFO oslo.messaging._drivers.impl_rabbit [-] Reconnecting to AMQP server on 10.66.6.15:5672
+2014-08-14 18:18:47.120 4035 INFO oslo.messaging._drivers.impl_rabbit [-] Delaying reconnect for 1.0 seconds...
+2014-08-14 18:36:50.566 4154 INFO oslo.messaging._drivers.impl_rabbit [-] Connected to AMQP server on 10.66.6.15:5672
+2014-08-14 18:43:41.262 4121 WARNING keystoneclient.middleware.auth_token [-] Configuring admin URI using auth fragments. This is deprecated, use 'identity_uri' instead.
+2014-08-14 18:43:41.295 4121 WARNING keystoneclient.middleware.auth_token [-] Configuring auth_uri to point to the public identity endpoint is required; clients may not be able to authenticate against an admin endpoint
+2014-08-14 18:36:42.985 3819 INFO glance.wsgi.server [b9d0706b-1b9a-4a63-9882-efb70f3566b8 43d9d82c7ede48409a978c126809505d bb7b603010784e1698c7c9f0a5c32fab - - -] 127.0.0.1 - - [14/Aug/2014 18:36:42] "GET /images/detail?limit=1000 HTTP/1.1" 200 1546 0.065719
+2014-08-14 18:36:45.774 3819 INFO glance.registry.api.v1.images [bf6e5185-3d67-42f6-badd-3b21af31de60 43d9d82c7ede48409a978c126809505d bb7b603010784e1698c7c9f0a5c32fab - - -] Returning detailed image list
+2014-08-14 18:44:23.942 3475 WARNING keystone.token.controllers [-] User 5327fdbbe71c45d2b0c737138b48eed8 is unauthorized for tenant 550446a07de2491c8e57868d02f29000
+2014-08-14 18:44:23.943 3475 WARNING keystone.common.wsgi [-] Authorization failed. The request you have made requires authentication. from 10.66.6.15
+2014-08-14 18:44:23.950 3475 INFO eventlet.wsgi.server [-] 10.66.6.15 - - [14/Aug/2014 18:44:23] "POST /v2.0/tokens HTTP/1.1" 401 311 0.099434

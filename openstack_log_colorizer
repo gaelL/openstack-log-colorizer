@@ -1,0 +1,116 @@
+#!/usr/bin/env python
+
+import sys
+import re
+
+class colors:
+    grey = '\033[1;30m'
+    red =  '\033[1;31m'
+    green = '\033[1;32m'
+    yellow = '\033[1;33m'
+    blue = '\033[1;34m'
+    magenta = '\033[1;35m'
+    cyan = '\033[1;36m'
+    white = '\033[1;37m'
+    end = '\033[1;m'
+
+def grey(text):
+    return '%s%s%s' % (colors.grey, text, colors.end)
+
+def red(text):
+    return '%s%s%s' % (colors.red, text, colors.end)
+
+def green(text):
+    return '%s%s%s' % (colors.green, text, colors.end)
+
+def yellow(text):
+    return '%s%s%s' % (colors.yellow, text, colors.end)
+
+def blue(text):
+    return '%s%s%s' % (colors.blue, text, colors.end)
+
+def magenta(text):
+    return '%s%s%s' % (colors.magenta, text, colors.end)
+
+def cyan(text):
+    return '%s%s%s' % (colors.cyan, text, colors.end)
+
+def white(text):
+    return '%s%s%s' % (colors.white, text, colors.end)
+
+def parse_line(line):
+    "Parse line and return dict of each elements"
+    # Line example :
+    # 2014-08-14 18:43:58.950 4092 INFO neutron.plugins.openvswitch.agent.ovs_neutron_agent
+    regex = (r'^([0-9]+-[0-9]+-[0-9]+) ' # date
+             '([0-9]+:[0-9]+:[0-9]+\.[0-9]+) ' # time
+             '([0-9]+) ' # process
+             '([A-Z]+) ' # level
+             '([^ ]+) ' # name
+             '(.+)') # text
+
+    result = re.match(regex, line)
+    if result is not None:
+        return { 'date': result.group(1),
+          'time': result.group(2),
+          'process': result.group(3),
+          'level': result.group(4),
+          'name': result.group(5),
+          'text': result.group(6),
+        }
+    return None
+
+def colored_level(level):
+    "Return level text with selected color tag"
+    if level in ['TRACE']:
+        return magenta(level)
+    if level in ['DEBUG', 'INFO']:
+        return green(level)
+    if level in ['WARNING']:
+        return yellow(level)
+    if level in ['CRITICAL', 'ERROR']:
+        return red(level)
+
+
+def colorize(line):
+    "Apply color tag on line"
+
+    # Unparsed line
+    if type(line) == type(str()):
+        return '%s' % (line)
+
+    # parsed line
+    if line['level'] == 'TRACE':
+        return '%s %s %s %s %s %s' % ( grey(line['date']),
+                                   grey(line['time']),
+                                   grey(line['process']),
+                                   colored_level(line['level']),
+                                   blue(line['name']),
+                                   grey(line['text']),)
+    else:
+        return '%s %s %s %s %s %s' % ( grey(line['date']),
+                                   grey(line['time']),
+                                   grey(line['process']),
+                                   colored_level(line['level']),
+                                   blue(line['name']),
+                                   white(line['text']),)
+
+
+if __name__ == '__main__':
+    # Read each line in stdin
+    while 1:
+        try:
+            line = sys.stdin.readline()
+        except KeyboardInterrupt:
+            break
+
+        if not line:
+            break
+
+        # get parsed line (dict) or if not match just keep line in str
+        parsed_line = parse_line(line.rstrip('\n')) or line.rstrip('\n')
+
+        # Print parsed and colored line
+        print colorize(parsed_line)
+
+
