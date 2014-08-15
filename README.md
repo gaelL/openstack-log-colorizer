@@ -1,7 +1,7 @@
 openstack log colorizer
 =======================
 
-Very simple OPS tool to color and filter openstack's logs in your term.
+Very simple devops tool to color and filter openstack's logs in your term.
 
 Openstack's logs can be very verbose and parse a huge unicolor text bloc could be painful.
 
