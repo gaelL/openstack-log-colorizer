@@ -2,6 +2,33 @@
 
 import sys
 import re
+import argparse
+
+PARSER = argparse.ArgumentParser()
+PARSER.add_argument("-l", "--level",
+            help="Set log level you want display",
+            metavar='level',
+            type=str)
+PARSER.add_argument("-e", "--exclude",
+            help="Set log level you want exclude",
+            metavar='level',
+            type=str,
+            nargs='+')
+PARSER.add_argument("-i", "--include",
+            help="Set log level you only want display",
+            metavar='level',
+            type=str,
+            nargs='+')
+ARGS = PARSER.parse_args()
+
+LOG_LEVEL = {
+    'critical': 50,
+    'error': 40,
+    'warning': 30,
+    'info': 20,
+    'debug': 10,
+    'notset': 100,
+}
 
 class colors:
     grey = '\033[1;30m'
@@ -58,7 +85,7 @@ def parse_line(line):
           'name': result.group(5),
           'text': result.group(6),
         }
-    return None
+    return {'text': line}
 
 def colored_level(level):
     "Return level text with selected color tag"
@@ -75,9 +102,9 @@ def colored_level(level):
 def colorize(line):
     "Apply color tag on line"
 
-    # Unparsed line
-    if type(line) == type(str()):
-        return '%s' % (line)
+    # Unparsed line (without level)
+    if line.get('level') is None:
+        return '%s' % (line.get('text'))
 
     # parsed line
     if line['level'] == 'TRACE':
@@ -95,9 +122,59 @@ def colorize(line):
                                    blue(line['name']),
                                    white(line['text']),)
 
+def check_args():
+    # Just allow one arg
+    num_args = sum(1 for i in [ARGS.level, ARGS.exclude, ARGS.include] if i)
+    if num_args > 1:
+        print 'Args conflicts select just one arg'
+        PARSER.print_help()
+        return False
+    return True
+
+def level_filter(line):
+    "Return true if line must be filtered. Never filter line without level"
+    level = ARGS.level.lower()
+    line_level = line.get('level', 'notset').lower()
+    if LOG_LEVEL.get(line_level, 100) < LOG_LEVEL.get(level, 0):
+        return True
+    else:
+        return False
+
+def include_filter(line):
+    "Return true if line must be filtered. Never filter line without level"
+    includes = [i.lower() for i in ARGS.include]
+    line_level = line.get('level', 'notset').lower()
+    if line_level == 'notset':
+        return False
+    elif line_level in includes:
+        return False
+    return True
+
+def exclude_filter(line):
+    "Return true if line must be filtered. Never filter line without level"
+    excludes = [e.lower() for e in ARGS.exclude]
+    line_level = line.get('level', 'notset').lower()
+    if line_level in excludes:
+        return True
+    return False
+
+def line_is_filtered(line):
+    "Skip the line ?"
+
+    if ARGS.level:
+        return level_filter(line)
+    elif ARGS.include:
+        return include_filter(line)
+    elif ARGS.exclude:
+        return exclude_filter(line)
+    return False
+
 
 if __name__ == '__main__':
     # Read each line in stdin
+    if not check_args():
+        sys.exit(1)
+
     while 1:
         try:
             line = sys.stdin.readline()
@@ -107,8 +184,12 @@ if __name__ == '__main__':
         if not line:
             break
 
-        # get parsed line (dict) or if not match just keep line in str
-        parsed_line = parse_line(line.rstrip('\n')) or line.rstrip('\n')
+        # get parsed line
+        parsed_line = parse_line(line.rstrip('\n'))
+
+        # Skip line if filtred (never skip line without log level)
+        if line_is_filtered(parsed_line):
+            continue
 
         # Print parsed and colored line
         print colorize(parsed_line)
