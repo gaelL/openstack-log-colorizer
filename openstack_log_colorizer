@@ -38,7 +38,7 @@ class colors:
     blue = '\033[1;34m'
     magenta = '\033[1;35m'
     cyan = '\033[1;36m'
-    white = '\033[1;37m'
+    white = '\033[0;37m'
     end = '\033[1;m'
 
 def grey(text):
