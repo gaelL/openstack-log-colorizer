@@ -71,7 +71,7 @@ def parse_line(line):
     # 2014-08-14 18:43:58.950 4092 INFO neutron.plugins.openvswitch.agent.ovs_neutron_agent
     regex = (r'^([0-9]+-[0-9]+-[0-9]+) ' # date
              '([0-9]+:[0-9]+:[0-9]+\.[0-9]+) ' # time
-             '([0-9]+) ' # process
+             '([0-9]+):? ' # process
              '([A-Z]+) ' # level
              '([^ ]+) ' # name
              '(.+)') # text
