@@ -65,6 +65,19 @@ def cyan(text):
 def white(text):
     return '%s%s%s' % (colors.white, text, colors.end)
 
+def colored_level(level):
+    "Return level text with selected color tag"
+    if level in ['TRACE']:
+        return magenta(level)
+    elif level in ['DEBUG', 'INFO']:
+        return green(level)
+    elif level in ['WARNING']:
+        return yellow(level)
+    elif level in ['CRITICAL', 'ERROR']:
+        return red(level)
+    else:
+        return white(level)
+
 def parse_line(line):
     "Parse line and return dict of each elements"
     # Line example :
@@ -84,43 +97,57 @@ def parse_line(line):
           'level': result.group(4),
           'name': result.group(5),
           'text': result.group(6),
+          '_type': 'default',
         }
-    return {'text': line}
 
-def colored_level(level):
-    "Return level text with selected color tag"
-    if level in ['TRACE']:
-        return magenta(level)
-    if level in ['DEBUG', 'INFO']:
-        return green(level)
-    if level in ['WARNING']:
-        return yellow(level)
-    if level in ['CRITICAL', 'ERROR']:
-        return red(level)
+    # Line example :
+    # 4092 INFO neutron.plugins.openvswitch.agent.ovs_neutron_agent
+    regex = (r'([0-9]+):? ' # process
+             '([A-Z]+) ' # level
+             '([^ ]+) ' # name
+             '(.+)') # text
+
+    result = re.match(regex, line)
+    if result is not None:
+        return { 'process': result.group(1),
+          'level': result.group(2),
+          'name': result.group(3),
+          'text': result.group(4),
+          '_type': 'default_without_datatime',
+        }
+
+    return {'text': line, '_type': None}
 
 
 def colorize(line):
     "Apply color tag on line"
 
     # Unparsed line (without level)
-    if line.get('level') is None:
+    if line.get('_type') is None:
         return '%s' % (line.get('text'))
 
-    # parsed line
-    if line['level'] == 'TRACE':
-        return '%s %s %s %s %s %s' % ( grey(line['date']),
+    # Default parsed line
+    if line.get('_type') == 'default':
+        if line.get('level') == 'TRACE':
+            colored_text=grey(line['text'])
+        else:
+            colored_text=white(line['text'])
+        return '%s %s %s: %s %s %s' % ( grey(line['date']),
                                    grey(line['time']),
                                    grey(line['process']),
                                    colored_level(line['level']),
                                    blue(line['name']),
-                                   grey(line['text']),)
-    else:
-        return '%s %s %s %s %s %s' % ( grey(line['date']),
-                                   grey(line['time']),
-                                   grey(line['process']),
-                                   colored_level(line['level']),
-                                   blue(line['name']),
-                                   white(line['text']),)
+                                   colored_text,)
+    # Default parsed line without date and time
+    elif line.get('_type') == 'default_without_datatime':
+        if line.get('level') == 'TRACE':
+            colored_text=grey(line['text'])
+        else:
+            colored_text=white(line['text'])
+        return '%s: %s %s %s' % ( grey(line['process']),
+                                 colored_level(line['level']),
+                                 blue(line['name']),
+                                 colored_text,)
 
 def check_args():
     # Just allow one arg
