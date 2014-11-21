@@ -23,10 +23,16 @@ ARGS = PARSER.parse_args()
 
 LOG_LEVEL = {
     'critical': 50,
+    'emer': 50,
     'error': 40,
+    'err': 40,
     'warning': 30,
+    'warn': 30,
+    'wrn': 30,
     'info': 20,
+    'inf': 20,
     'debug': 10,
+    'dbg': 10,
     'notset': 100,
 }
 
@@ -67,20 +73,22 @@ def white(text):
 
 def colored_level(level):
     "Return level text with selected color tag"
-    if level in ['TRACE']:
+    level = level.upper()
+    if level in ['TRACE', 'SEC']:
         return magenta(level)
-    elif level in ['DEBUG', 'INFO']:
+    elif level in ['DEBUG', 'DBG', 'INFO', 'INF']:
         return green(level)
-    elif level in ['WARNING']:
+    elif level in ['WARNING', 'WRN', 'WARN', '???']:
         return yellow(level)
-    elif level in ['CRITICAL', 'ERROR']:
+    elif level in ['CRITICAL', 'ERROR', 'ERR', 'EMER']:
         return red(level)
     else:
         return white(level)
 
+
 def parse_line(line):
     "Parse line and return dict of each elements"
-    # Line example :
+    # Line example : Openstack
     # 2014-08-14 18:43:58.950 4092 INFO neutron.plugins.openvswitch.agent.ovs_neutron_agent
     regex = (r'^([0-9]+-[0-9]+-[0-9]+) ' # date
              '([0-9]+:[0-9]+:[0-9]+\.[0-9]+) ' # time
@@ -100,7 +108,7 @@ def parse_line(line):
           '_type': 'default',
         }
 
-    # Line example :
+    # Line example : Openstack without date and time
     # 4092 INFO neutron.plugins.openvswitch.agent.ovs_neutron_agent
     regex = (r'([0-9]+):? ' # process
              '([A-Z]+) ' # level
@@ -116,15 +124,49 @@ def parse_line(line):
           '_type': 'default_without_datatime',
         }
 
+    # Line example : Ceph.log
+    # 2014-11-17 18:27:11.731721 mon.0 10.142.63.18:6789/0 2005 : [INF]
+    regex = (r'^([0-9]+-[0-9]+-[0-9]+) ' # date
+             '([0-9]+:[0-9]+:[0-9]+\.[0-9]+) ' # time
+             '([^\[]+) ' # who
+             '\[([A-Z\?]+)\] ' # level
+             '(.+)') # text
+
+    result = re.match(regex, line)
+    if result is not None:
+        return { 'date': result.group(1),
+          'time': result.group(2),
+          'who': result.group(3),
+          'level': result.group(4),
+          'text': result.group(5),
+          '_type': 'ceph.log',
+        }
+
+    # Line example : ovs.log
+    #2014-11-21T06:25:09.549Z|00012|vlog|INFO|opened log file /var/log/op...
+    regex = (r'^([0-9]+-[0-9]+-[0-9]+)T' # date
+             '([0-9]+:[0-9]+:[0-9]+\.[0-9]+)Z\|' # time
+             '([0-9]+)\|' # serial
+             '([^\|]+)\|' # name
+             '([^\|]+)\|' # level
+             '(.+)') # text
+
+    result = re.match(regex, line)
+    if result is not None:
+        return { 'date': result.group(1),
+          'time': result.group(2),
+          'serial': result.group(3),
+          'name': result.group(4),
+          'level': result.group(5),
+          'text': result.group(6),
+          '_type': 'ovs.log',
+        }
+
     return {'text': line, '_type': None}
 
 
 def colorize(line):
     "Apply color tag on line"
-
-    # Unparsed line (without level)
-    if line.get('_type') is None:
-        return '%s' % (line.get('text'))
 
     # Default parsed line
     if line.get('_type') == 'default':
@@ -148,6 +190,25 @@ def colorize(line):
                                  colored_level(line['level']),
                                  blue(line['name']),
                                  colored_text,)
+    # Ceph.log
+    elif line.get('_type') == 'ceph.log':
+        return '%s %s %s [%s] %s' % ( grey(line['date']),
+                                 grey(line['time']),
+                                 blue(line['who']),
+                                 colored_level(line['level']),
+                                 white(line['text']),)
+    # ovs.log
+    elif line.get('_type') == 'ovs.log':
+        return '%s %s %s %s %s %s' % ( grey(line['date']),
+                                 grey(line['time']),
+                                 grey(line['serial']),
+                                 blue(line['name']),
+                                 colored_level(line['level']),
+                                 white(line['text']),)
+
+    # Unparsed line (without level)
+    else:
+        return '%s' % (line.get('text'))
 
 def check_args():
     # Just allow one arg

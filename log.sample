@@ -1,3 +1,4 @@
+# Openstack
 2014-08-14 18:43:58.950 4092 INFO neutron.plugins.openvswitch.agent.ovs_neutron_agent [-] Configuration for device 10170007-cc24-40af-a92d-bde5b54c9af0 completed.
 2014-08-14 18:44:15.136 4092 INFO neutron.agent.securitygroups_rpc [-] Preparing filters for devices set([u'45a394f7-1bc7-4ee6-98c5-a631c67bb79a'])
 2014-08-14 18:44:17.689 4092 WARNING neutron.plugins.openvswitch.agent.ovs_neutron_agent [-] Device 45a394f7-1bc7-4ee6-98c5-a631c67bb79a not defined on plugin
@@ -19,4 +20,22 @@
 2014-08-14 18:44:23.943 3475 WARNING keystone.common.wsgi [-] Authorization failed. The request you have made requires authentication. from 10.66.6.15
 2014-08-14 18:44:23.950 3475 INFO eventlet.wsgi.server [-] 10.66.6.15 - - [14/Aug/2014 18:44:23] "POST /v2.0/tokens HTTP/1.1" 401 311 0.099434
 1000: INFO neutron.wsgi [req-f31f372b-df5c-474f-85da-b996f47d010a None] 10.142.63.18 - - [17/Nov/2014 19:23:11] "OPTIONS / HTTP/1.0" 200 263 0.000393
+# ceph.log
+2014-11-17 18:27:11.731721 mon.0 10.142.63.18:6789/0 2005 : [INF] pgmap v14316: 3264 pgs: 3264 active+clean; 213 MB data, 13084 MB used, 803 GB / 816 GB avail
+2014-11-17 18:26:16.354403 osd.2 10.142.63.19:6800/3574 1071 : [INF] 5.3ff deep-scrub ok
+# ceph-mon.log
+2014-11-17 21:17:47.046792 7f418be2d700  0 mon.8e0a123f@0(leader).data_health(18) update_stats avail 85% total 115974596 used 16307044 avail 99651168
+2014-11-17 21:17:49.643333 7f418be2d700  1 mon.8e0a123f@0(leader).paxos(paxos active c 34388..35012) is_readable now=2014-11-17 21:17:49.643345 lease_expire=2014-11-17 21:17:52.660143 has v0 lc 35012
+# ceph-osd.log
+2014-11-17 14:19:06.525676 7f56bc1d0700  0 log [INF] : 5.3f8 deep-scrub ok
+2014-11-17 14:56:44.772568 7f56b653a700  0 -- 10.142.63.18:6801/19487 >> 10.142.63.20:6801/3483 pipe(0x7f56d6009b80 sd=166 :6801 s=2 pgs=4 cs=1 l=0 c=0x7f56d5dccb00).fault with nothing to send, going to standby
+2014-11-17 13:02:49.960333 7f56d3877780 -1 journal FileJournal::_open: disabling aio for non-block journal.  Use journal_force_aio to force use of aio anyway
+2014-11-17 13:02:50.127432 7f56d3877780  0 osd.0 34 crush map has features 1107558400, adjusting msgr requires for clients
+# Openvswitch
+2014-11-17T16:06:11.177Z|00001|vlog|INFO|opened log file /var/log/openvswitch/ovsdb-server.log
+2014-11-17T16:06:11.315Z|00002|ovsdb_server|INFO|ovsdb-server (Open vSwitch) 2.3.0
+2014-11-17T16:26:23.104Z|00005|fatal_signal|WARN|terminating with signal 15 (Terminated)
+2014-11-17T17:32:34.273Z|00125|connmgr|INFO|br-tun<->unix: 1 flow_mods in the last 0 s (1 adds)
+2014-11-17T17:37:32.370Z|00126|bridge|INFO|bridge br-int: added interface qvo9cb4fcb9-52 on port
+# Test sample
 2014-08-14 18:44:23.950 3475 unmatched line so no level setted SAMPLE
