@@ -23,14 +23,6 @@
 # ceph.log
 2014-11-17 18:27:11.731721 mon.0 10.142.63.18:6789/0 2005 : [INF] pgmap v14316: 3264 pgs: 3264 active+clean; 213 MB data, 13084 MB used, 803 GB / 816 GB avail
 2014-11-17 18:26:16.354403 osd.2 10.142.63.19:6800/3574 1071 : [INF] 5.3ff deep-scrub ok
-# ceph-mon.log
-2014-11-17 21:17:47.046792 7f418be2d700  0 mon.8e0a123f@0(leader).data_health(18) update_stats avail 85% total 115974596 used 16307044 avail 99651168
-2014-11-17 21:17:49.643333 7f418be2d700  1 mon.8e0a123f@0(leader).paxos(paxos active c 34388..35012) is_readable now=2014-11-17 21:17:49.643345 lease_expire=2014-11-17 21:17:52.660143 has v0 lc 35012
-# ceph-osd.log
-2014-11-17 14:19:06.525676 7f56bc1d0700  0 log [INF] : 5.3f8 deep-scrub ok
-2014-11-17 14:56:44.772568 7f56b653a700  0 -- 10.142.63.18:6801/19487 >> 10.142.63.20:6801/3483 pipe(0x7f56d6009b80 sd=166 :6801 s=2 pgs=4 cs=1 l=0 c=0x7f56d5dccb00).fault with nothing to send, going to standby
-2014-11-17 13:02:49.960333 7f56d3877780 -1 journal FileJournal::_open: disabling aio for non-block journal.  Use journal_force_aio to force use of aio anyway
-2014-11-17 13:02:50.127432 7f56d3877780  0 osd.0 34 crush map has features 1107558400, adjusting msgr requires for clients
 # Openvswitch
 2014-11-17T16:06:11.177Z|00001|vlog|INFO|opened log file /var/log/openvswitch/ovsdb-server.log
 2014-11-17T16:06:11.315Z|00002|ovsdb_server|INFO|ovsdb-server (Open vSwitch) 2.3.0
